@@ -38,6 +38,14 @@ th {
     cursor: pointer;
 }
 
+/* Styl dla zablokowanych wykładowców */
+.wykladowca.zablokowany {
+    background-color: #d3d3d3; /* Szary kolor tła */
+    color: #808080; /* Szary kolor tekstu */
+    cursor: not-allowed; /* Ikona kursora wskazująca, że element jest nieaktywny */
+}
+
+
 /* Przyciski */
 #przyciski {
     text-align: center;
