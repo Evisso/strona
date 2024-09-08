@@ -142,3 +142,18 @@ function resetujPostepy() {
     localStorage.removeItem('przypisaniWykladowcy');
     // Zresetuj listę wykładowców do początkowego stanu
     resztaWykladowcow = wykladowcy.slice(4);
+    wyswietlWykladowcow();
+    alert('Tabela zresetowana!');
+}
+
+// Dodawanie event listenerów do komórek tabeli
+document.querySelectorAll('td').forEach(komorka => {
+    komorka.addEventListener('click', () => dodajOsobeDoKomorki(komorka));
+});
+
+// Obsługa przycisków zapisywania i resetowania
+document.getElementById('zapisz-btn').addEventListener('click', zapiszPostepy);
+document.getElementById('resetuj-btn').addEventListener('click', resetujPostepy);
+
+// Załaduj zapisane postępy, jeśli są dostępne
+zaladujPostepy();
