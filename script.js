@@ -52,7 +52,7 @@ function zapiszPostepy() {
     });
     localStorage.setItem('tabela', JSON.stringify(tabela));
     localStorage.setItem('przypisaniWykladowcy', JSON.stringify(przypisaniWykladowcy));  // Zapis przypisanych wykładowców
-    alert('Postępy zapisane!');
+    alert('Postępy zapisane!');  // Komunikat pojawi się tylko po zapisaniu postępów
 }
 
 // Załadowanie zapisanych postępów z localStorage
