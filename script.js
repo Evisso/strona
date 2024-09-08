@@ -87,5 +87,12 @@ document.querySelectorAll('td').forEach(komorka => {
     komorka.addEventListener('click', () => dodajOsobeDoKomorki(komorka));
 });
 
+// Obsługa przycisków zapisywania i resetowania
+document.getElementById('zapisz-btn').addEventListener('click', zapiszPostepy);
+document.getElementById('resetuj-btn').addEventListener('click', resetujPostepy);
+
 // Wyświetlenie wykładowców na starcie
 wyswietlWykladowcow();
+
+// Załaduj zapisane postępy, jeśli są dostępne
+zaladujPostepy();
