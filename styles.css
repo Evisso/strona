@@ -45,6 +45,13 @@ th {
     cursor: not-allowed; /* Ikona kursora wskazująca, że element jest nieaktywny */
 }
 
+/* Styl dla wybranego wykładowcy (klikniętego) */
+.wykladowca.wybrany {
+    background-color: white; /* Normalny kolor tła */
+    color: black; /* Normalny kolor tekstu */
+    cursor: pointer;
+}
+
 
 /* Przyciski */
 #przyciski {
