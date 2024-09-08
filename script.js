@@ -29,8 +29,11 @@ function wyswietlWykladowcow() {
 function zablokujWykladowcow() {
     const wykładowcyElements = document.querySelectorAll('.wykladowca');
     wykładowcyElements.forEach(element => {
-        element.classList.add('zablokowany');  // Dodanie klasy 'zablokowany' do elementu
-        element.style.pointerEvents = 'none';  // Zablokowanie możliwości kliknięcia
+        // Jeśli element nie ma klasy 'wybrany', blokujemy go
+        if (!element.classList.contains('wybrany')) {
+            element.classList.add('zablokowany');  // Dodanie klasy 'zablokowany' do elementu
+            element.style.pointerEvents = 'none';  // Zablokowanie możliwości kliknięcia
+        }
     });
 }
 
@@ -49,7 +52,9 @@ function wybierzWykladowce(wykladowca, element) {
         return;  // Jeżeli jest już wybrany wykładowca, nic nie rób
     }
     wybranaOsoba = wykladowca;
-    element.classList.add('wybrany');  // Dodanie klasy, która wyróżnia wybranego wykładowcę
+
+    // Dodaj klasę 'wybrany' do klikniętego wykładowcy
+    element.classList.add('wybrany');
     zablokujWykladowcow();  // Zablokowanie innych wykładowców
 
     // Pozostawienie klikniętego wykładowcy aktywnego
