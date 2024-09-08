@@ -51,6 +51,37 @@ function dodajOsobeDoKomorki(komorka) {
     }
 }
 
+// Zapisanie stanu tabeli w localStorage
+function zapiszPostepy() {
+    const tabela = {};
+    document.querySelectorAll('td').forEach(komorka => {
+        const key = `${komorka.dataset.row}-${komorka.dataset.col}`;
+        tabela[key] = komorka.textContent;
+    });
+    localStorage.setItem('tabela', JSON.stringify(tabela));
+    alert('Postępy zapisane!');
+}
+
+// Załadowanie zapisanych postępów z localStorage
+function zaladujPostepy() {
+    const tabela = JSON.parse(localStorage.getItem('tabela'));
+    if (tabela) {
+        document.querySelectorAll('td').forEach(komorka => {
+            const key = `${komorka.dataset.row}-${komorka.dataset.col}`;
+            komorka.textContent = tabela[key] || '';
+        });
+    }
+}
+
+// Resetowanie tabeli
+function resetujPostepy() {
+    document.querySelectorAll('td').forEach(komorka => {
+        komorka.textContent = '';
+    });
+    localStorage.removeItem('tabela');
+    alert('Tabela zresetowana!');
+}
+
 // Dodawanie event listenerów do komórek tabeli
 document.querySelectorAll('td').forEach(komorka => {
     komorka.addEventListener('click', () => dodajOsobeDoKomorki(komorka));
