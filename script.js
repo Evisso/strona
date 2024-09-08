@@ -25,21 +25,35 @@ function wyswietlWykladowcow() {
     });
 }
 
+// Funkcja blokująca innych wykładowców
+function zablokujWykladowcow() {
+    const wykładowcyElements = document.querySelectorAll('.wykladowca');
+    wykładowcyElements.forEach(element => {
+        element.classList.add('zablokowany');  // Dodanie klasy 'zablokowany' do elementu
+        element.style.pointerEvents = 'none';  // Zablokowanie możliwości kliknięcia
+    });
+}
+
+// Funkcja odblokowująca wykładowców
+function odblokujWykladowcow() {
+    const wykładowcyElements = document.querySelectorAll('.wykladowca');
+    wykładowcyElements.forEach(element => {
+        element.classList.remove('zablokowany');  // Usunięcie klasy 'zablokowany'
+        element.style.pointerEvents = 'auto';  // Przywrócenie możliwości kliknięcia
+    });
+}
+
 // Funkcja wybierająca wykładowcę
 function wybierzWykladowce(wykladowca, element) {
-    wybranaOsoba = wykladowca;
-    element.remove();  // Usunięcie osoby z listy po kliknięciu
-
-    // Jeśli są jeszcze wykładowcy w reszcie, dodaj następnego
-    if (resztaWykladowcow.length > 0) {
-        const nastepnaOsoba = resztaWykladowcow.shift();
-        const listaElement = document.getElementById('wykladowcy-lista');
-        const nowyElement = document.createElement('div');
-        nowyElement.classList.add('wykladowca');
-        nowyElement.textContent = nastepnaOsoba;
-        nowyElement.addEventListener('click', () => wybierzWykladowce(nastepnaOsoba, nowyElement));
-        listaElement.appendChild(nowyElement);
+    if (wybranaOsoba) {
+        return;  // Jeżeli jest już wybrany wykładowca, nic nie rób
     }
+    wybranaOsoba = wykladowca;
+    element.classList.add('wybrany');  // Dodanie klasy, która wyróżnia wybranego wykładowcę
+    zablokujWykladowcow();  // Zablokowanie innych wykładowców
+
+    // Pozostawienie klikniętego wykładowcy aktywnego
+    element.style.pointerEvents = 'auto';  
 }
 
 // Funkcja dodająca wykładowcę do komórki tabeli
@@ -52,6 +66,8 @@ function dodajOsobeDoKomorki(komorka) {
         }
         przypisaniWykladowcy.push(wybranaOsoba);  // Dodanie wykładowcy do listy przypisanych
         wybranaOsoba = null;  // Resetowanie wyboru osoby
+        odblokujWykladowcow();  // Odblokowanie innych wykładowców
+        wyswietlWykladowcow();  // Ponowne wyświetlenie wykładowców
     }
 }
 
