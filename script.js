@@ -2,7 +2,7 @@
 const wykladowcy = ['Kańczurzewska', 'Gajda', 'Gleska', 'Robercik', 'Tomasz', 'Leśnik', 'Płuciennik', 'Kiwer', 'Kolwicz', 'Oleksik',
     'Derda', 'Piosik', 'Jagódka', 'Blandzi', 'Ziemkowska', 'Głuchy', 'Kasprzyk', 'Pietracho', 'Szyszka', 'Jankowska',
     'Gielniak', 'Walczak', 'Dębicka', 'Karolczak', 'Graczkowski xd', 'Morańda', 'Krawiecki', 'Prokop', 'Wiczyński',
-    'Szczerbowski', 'Roman', 'Kasińska', 'Iwaszkiewicz'];
+    'Szczerbowski', 'Roman', 'Kasińska'];
 
 let wybranaOsoba = null;  // Przechowuje klikniętego wykładowcę
 let przypisaniWykladowcy = [];  // Lista przypisanych wykładowców
