@@ -76,6 +76,16 @@ function dodajOsobeDoKomorki(komorka) {
     }
 }
 
+// Funkcja usuwająca wykładowcę z komórki tabeli po kliknięciu
+function usunOsobeZKomorki(komorka) {
+    const nazwisko = komorka.textContent.trim();
+    if (nazwisko) {
+        komorka.textContent = '';  // Usunięcie nazwiska z komórki
+        przypisaniWykladowcy = przypisaniWykladowcy.filter(wykladowca => wykładowca !== nazwisko);  // Usunięcie z listy przypisanych
+        wyswietlWykladowcow();  // Zaktualizowanie listy wykładowców
+    }
+}
+
 // Zapisanie stanu tabeli w localStorage
 function zapiszPostepy() {
     const tabela = {};
@@ -128,7 +138,13 @@ function resetujPostepy() {
 
 // Dodawanie event listenerów do komórek tabeli
 document.querySelectorAll('td').forEach(komorka => {
-    komorka.addEventListener('click', () => dodajOsobeDoKomorki(komorka));
+    komorka.addEventListener('click', () => {
+        if (wybranaOsoba) {
+            dodajOsobeDoKomorki(komorka);
+        } else {
+            usunOsobeZKomorki(komorka);  // Jeśli nie ma wybranej osoby, usuń osobę z komórki
+        }
+    });
 });
 
 // Obsługa przycisków zapisywania i resetowania
