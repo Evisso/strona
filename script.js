@@ -76,14 +76,15 @@ function dodajOsobeDoKomorki(komorka) {
     }
 }
 
-// Funkcja usuwająca wykładowcę z komórki tabeli po kliknięciu
-function usunOsobeZKomorki(komorka) {
-    const nazwisko = komorka.textContent.trim();
-    if (nazwisko) {
-        komorka.textContent = '';  // Usunięcie nazwiska z komórki
-        przypisaniWykladowcy = przypisaniWykladowcy.filter(wykladowca => wykładowca !== nazwisko);  // Usunięcie z listy przypisanych
-        wyswietlWykladowcow();  // Zaktualizowanie listy wykładowców
-    }
+// Funkcja usuwająca wybrane nazwisko z komórki i dodająca je z powrotem do listy dostępnych wykładowców
+function usunNazwiskoZKomorki(komorka, nazwisko) {
+    // Usuń nazwisko z komórki
+    let nazwiska = komorka.textContent.split(', ').filter(n => n !== nazwisko);
+    komorka.textContent = nazwiska.join(', ');
+
+    // Usuń nazwisko z listy przypisanych i zaktualizuj listę wykładowców
+    przypisaniWykladowcy = przypisaniWykladowcy.filter(wykladowca => wykładowca !== nazwisko);
+    wyswietlWykladowcow();  // Odświeżenie listy dostępnych wykładowców
 }
 
 // Zapisanie stanu tabeli w localStorage
@@ -141,7 +142,7 @@ document.querySelectorAll('td').forEach(komorka => {
     komorka.addEventListener('click', () => {
         if (wybranaOsoba) {
             dodajOsobeDoKomorki(komorka);
-        } else {
+        } else
             usunOsobeZKomorki(komorka);  // Jeśli nie ma wybranej osoby, usuń osobę z komórki
         }
     });
