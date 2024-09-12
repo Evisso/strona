@@ -6,14 +6,15 @@ const wykladowcy = ['Kańczurzewska', 'Gajda', 'Gleska', 'Robercik', 'Tomasz', '
 
 let wybranaOsoba = null;  // Przechowuje klikniętego wykładowcę
 let przypisaniWykladowcy = [];  // Lista przypisanych wykładowców
+let resztaWykladowcow = wykladowcy.slice(4);  // Reszta wykładowców poza początkowymi 4
 
 // Funkcja dodająca wykładowców na ekran
 function wyswietlWykladowcow() {
     const listaElement = document.getElementById('wykladowcy-lista');
     listaElement.innerHTML = ''; // Czyszczenie listy przed ponownym wyświetleniem
     
-    // Wyświetl nieprzypisanych wykładowców
-    const widoczniWykladowcy = wykladowcy.filter(wykladowca => !przypisaniWykladowcy.includes(wykladowca));
+    // Wyświetl tylko 4 pierwszych nieprzypisanych wykładowców
+    const widoczniWykladowcy = wykladowcy.filter(wykladowca => !przypisaniWykladowcy.includes(wykladowca)).slice(0, 4);
 
     widoczniWykladowcy.forEach(wykladowca => {
         const element = document.createElement('div');
@@ -60,24 +61,80 @@ function wybierzWykladowce(wykladowca, element) {
     element.style.pointerEvents = 'auto';  
 }
 
-// Funkcja usuwająca wykładowcę z komórki
-function usunOsobeZKomorki(komorka) {
-    if (komorka.textContent) {
-        const wykładowcyWKlodce = komorka.textContent.split(', ');  // Lista przypisanych wykładowców w komórce
-        const wykladowcaDoUsuniecia = wykładowcyWKlodce.pop();  // Usunięcie ostatniego wykładowcy
-
-        // Zaktualizowanie zawartości komórki
-        if (wykładowcyWKlodce.length > 0) {
-            komorka.textContent = wykładowcyWKlodce.join(', ');
+// Funkcja dodająca wykładowcę do komórki tabeli
+function dodajOsobeDoKomorki(komorka) {
+    if (wybranaOsoba && !przypisaniWykladowcy.includes(wybranaOsoba)) {
+        if (!komorka.textContent) {
+            komorka.textContent = wybranaOsoba;
         } else {
-            komorka.textContent = '';
+            komorka.textContent += ', ' + wybranaOsoba;
         }
-
-        // Usuń wykładowcę z przypisanych
-        przypisaniWykladowcy = przypisaniWykladowcy.filter(wykl => wyk !== wykladowcaDoUsuniecia);
-        wyswietlWykladowcow();  // Ponownie wyświetl wykładowców na liście
+        przypisaniWykladowcy.push(wybranaOsoba);  // Dodanie wykładowcy do listy przypisanych
+        wybranaOsoba = null;  // Resetowanie wyboru osoby
+        odblokujWykladowcow();  // Odblokowanie innych wykładowców
+        wyswietlWykladowcow();  // Ponowne wyświetlenie wykładowców
     }
 }
 
-// Funkcja dodająca lub usuwająca wykładowcę z komórki
-function dodajLub
+
+// Zapisanie stanu tabeli w localStorage
+function zapiszPostepy() {
+    const tabela = {};
+    document.querySelectorAll('td').forEach(komorka => {
+        const key = `${komorka.dataset.row}-${komorka.dataset.col}`;
+        tabela[key] = komorka.textContent;
+    });
+    localStorage.setItem('tabela', JSON.stringify(tabela));
+    localStorage.setItem('przypisaniWykladowcy', JSON.stringify(przypisaniWykladowcy));  // Zapis przypisanych wykładowców
+    localStorage.setItem('resztaWykladowcow', JSON.stringify(resztaWykladowcow));  // Zapisanie reszty wykładowców
+    alert('Postępy zapisane!');  // Komunikat pojawi się tylko po zapisaniu postępów
+}
+
+// Załadowanie zapisanych postępów z localStorage
+function zaladujPostepy() {
+    const tabela = JSON.parse(localStorage.getItem('tabela'));
+    const zapisaniWykladowcy = JSON.parse(localStorage.getItem('przypisaniWykladowcy'));
+    const zapisaniResztaWykladowcow = JSON.parse(localStorage.getItem('resztaWykladowcow'));
+
+    if (zapisaniWykladowcy) {
+        przypisaniWykladowcy = zapisaniWykladowcy;
+    }
+    
+    if (zapisaniResztaWykladowcow) {
+        resztaWykladowcow = zapisaniResztaWykladowcow;
+    }
+
+    if (tabela) {
+        document.querySelectorAll('td').forEach(komorka => {
+            const key = `${komorka.dataset.row}-${komorka.dataset.col}`;
+            komorka.textContent = tabela[key] || '';
+        });
+    }
+    wyswietlWykladowcow();  // Wyświetlenie dostępnych wykładowców po załadowaniu postępów
+}
+
+// Resetowanie tabeli
+function resetujPostepy() {
+    document.querySelectorAll('td').forEach(komorka => {
+        komorka.textContent = '';
+    });
+    przypisaniWykladowcy = [];  // Zresetowanie przypisanych wykładowców
+    resztaWykladowcow = wykladowcy.slice(4);  // Zresetowanie reszty wykładowców
+    localStorage.removeItem('tabela');
+    localStorage.removeItem('przypisaniWykladowcy');
+    localStorage.removeItem('resztaWykladowcow');  // Usunięcie zapisanej reszty wykładowców
+    wyswietlWykladowcow();  // Odświeżenie listy wykładowców
+    alert('Tabela zresetowana!');
+}
+
+// Dodawanie event listenerów do komórek tabeli
+document.querySelectorAll('td').forEach(komorka => {
+    komorka.addEventListener('click', () => dodajOsobeDoKomorki(komorka));
+});
+
+// Obsługa przycisków zapisywania i resetowania
+document.getElementById('zapisz-btn').addEventListener('click', zapiszPostepy);
+document.getElementById('resetuj-btn').addEventListener('click', resetujPostepy);
+
+// Wyświetlenie wykładowców na starcie
+zaladujPostepy();
