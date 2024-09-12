@@ -142,8 +142,12 @@ document.querySelectorAll('td').forEach(komorka => {
     komorka.addEventListener('click', () => {
         if (wybranaOsoba) {
             dodajOsobeDoKomorki(komorka);
-        } else
-            usunOsobeZKomorki(komorka);  // Jeśli nie ma wybranej osoby, usuń osobę z komórki
+        } else {
+            // Usuń wykładowcę po kliknięciu w jego nazwisko w komórce
+            const nazwiska = komorka.textContent.split(', ');
+            nazwiska.forEach(nazwisko => {
+                komorka.addEventListener('click', () => usunNazwiskoZKomorki(komorka, nazwisko));
+            });
         }
     });
 });
