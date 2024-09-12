@@ -6,15 +6,14 @@ const wykladowcy = ['Kańczurzewska', 'Gajda', 'Gleska', 'Robercik', 'Tomasz', '
 
 let wybranaOsoba = null;  // Przechowuje klikniętego wykładowcę
 let przypisaniWykladowcy = [];  // Lista przypisanych wykładowców
-let resztaWykladowcow = wykladowcy.slice(4);  // Reszta wykładowców poza początkowymi 4
 
 // Funkcja dodająca wykładowców na ekran
 function wyswietlWykladowcow() {
     const listaElement = document.getElementById('wykladowcy-lista');
     listaElement.innerHTML = ''; // Czyszczenie listy przed ponownym wyświetleniem
     
-    // Wyświetl tylko 4 pierwszych nieprzypisanych wykładowców
-    const widoczniWykladowcy = wykladowcy.filter(wykladowca => !przypisaniWykladowcy.includes(wykladowca)).slice(0, 4);
+    // Wyświetl nieprzypisanych wykładowców
+    const widoczniWykladowcy = wykladowcy.filter(wykladowca => !przypisaniWykladowcy.includes(wykladowca));
 
     widoczniWykladowcy.forEach(wykladowca => {
         const element = document.createElement('div');
@@ -22,27 +21,6 @@ function wyswietlWykladowcow() {
         element.textContent = wykladowca;
         element.addEventListener('click', () => wybierzWykladowce(wykladowca, element));
         listaElement.appendChild(element);
-    });
-}
-
-// Funkcja blokująca innych wykładowców
-function zablokujWykladowcow() {
-    const wykładowcyElements = document.querySelectorAll('.wykladowca');
-    wykładowcyElements.forEach(element => {
-        // Jeśli element nie ma klasy 'wybrany', blokujemy go
-        if (!element.classList.contains('wybrany')) {
-            element.classList.add('zablokowany');  // Dodanie klasy 'zablokowany' do elementu
-            element.style.pointerEvents = 'none';  // Zablokowanie możliwości kliknięcia
-        }
-    });
-}
-
-// Funkcja odblokowująca wykładowców
-function odblokujWykladowcow() {
-    const wykładowcyElements = document.querySelectorAll('.wykladowca');
-    wykładowcyElements.forEach(element => {
-        element.classList.remove('zablokowany');  // Usunięcie klasy 'zablokowany'
-        element.style.pointerEvents = 'auto';  // Przywrócenie możliwości kliknięcia
     });
 }
 
@@ -55,10 +33,6 @@ function wybierzWykladowce(wykladowca, element) {
 
     // Dodaj klasę 'wybrany' do klikniętego wykładowcy
     element.classList.add('wybrany');
-    zablokujWykladowcow();  // Zablokowanie innych wykładowców
-
-    // Pozostawienie klikniętego wykładowcy aktywnego
-    element.style.pointerEvents = 'auto';  
 }
 
 // Funkcja dodająca wykładowcę do komórki tabeli
@@ -71,7 +45,6 @@ function dodajOsobeDoKomorki(komorka) {
         }
         przypisaniWykladowcy.push(wybranaOsoba);  // Dodanie wykładowcy do listy przypisanych
         wybranaOsoba = null;  // Resetowanie wyboru osoby
-        odblokujWykladowcow();  // Odblokowanie innych wykładowców
         wyswietlWykladowcow();  // Ponowne wyświetlenie wykładowców
     }
 }
@@ -96,7 +69,6 @@ function zapiszPostepy() {
     });
     localStorage.setItem('tabela', JSON.stringify(tabela));
     localStorage.setItem('przypisaniWykladowcy', JSON.stringify(przypisaniWykladowcy));  // Zapis przypisanych wykładowców
-    localStorage.setItem('resztaWykladowcow', JSON.stringify(resztaWykladowcow));  // Zapisanie reszty wykładowców
     alert('Postępy zapisane!');  // Komunikat pojawi się tylko po zapisaniu postępów
 }
 
@@ -104,14 +76,9 @@ function zapiszPostepy() {
 function zaladujPostepy() {
     const tabela = JSON.parse(localStorage.getItem('tabela'));
     const zapisaniWykladowcy = JSON.parse(localStorage.getItem('przypisaniWykladowcy'));
-    const zapisaniResztaWykladowcow = JSON.parse(localStorage.getItem('resztaWykladowcow'));
 
     if (zapisaniWykladowcy) {
         przypisaniWykladowcy = zapisaniWykladowcy;
-    }
-    
-    if (zapisaniResztaWykladowcow) {
-        resztaWykladowcow = zapisaniResztaWykladowcow;
     }
 
     if (tabela) {
@@ -129,10 +96,8 @@ function resetujPostepy() {
         komorka.textContent = '';
     });
     przypisaniWykladowcy = [];  // Zresetowanie przypisanych wykładowców
-    resztaWykladowcow = wykladowcy.slice(4);  // Zresetowanie reszty wykładowców
     localStorage.removeItem('tabela');
     localStorage.removeItem('przypisaniWykladowcy');
-    localStorage.removeItem('resztaWykladowcow');  // Usunięcie zapisanej reszty wykładowców
     wyswietlWykladowcow();  // Odświeżenie listy wykładowców
     alert('Tabela zresetowana!');
 }
